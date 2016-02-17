@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Threads</title>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+	<style type="text/css">
+		.main{
+			margin: auto;
+			width: 65%;
+			height: auto;
+			border: solid 3px black;
+			padding: 15px;
+		}
+
+		.text{
+		font-family: verdana;
+		font-size: 14px;
+		}
+
+		.title{
+			font-family: verdana;
+			font-size: 20px;
+		}
+
+		.boxes{
+			text-align: center;
+		}
+
+		.button{
+			color: #000000;
+		 	font-weight: bold;
+			font-size: 150%;
+		 	text-transform: uppercase;
+		 	border: 3px solid;
+		    border-radius: 25px;
+		}
+
+		.userbox{
+			width: 450px;
+			height: 50px;
+			font-size: 14px;
+		}
+
+		.big{
+			font-size: 30px;
+		}
+	</style>
+
+</head>
+	<body>
+		<div class="main">
+			<h1>
+				Lister för trådar nedan!	
+			</h1>
+
+			<button class="button" onClick="getMessages()">Get Comments</button><br><br>
+
+			<p id="input" class="comments"></p>
+		
+			<script type="text/javascript">
+		
+				function getMessages(){
+			
+				$.ajax({
+				
+				  url: "/api/threads",
+				
+				}).done(function(data) 
+				{
+			
+					if(data.threads.length <= 0){
+
+						console.log("Error");
+						
+					} else {
+
+						console.log(data);
+				
+					document.getElementById("input").innerHTML = "";
+						
+						for(var i = 0; i < data.threads.length; i++){
+					document.getElementById("input").innerHTML +=
+					"<div>" + "<b>" + data.threads[i].title + "</b>" + ": " + data.threads[i].text + "." + "</div>" + "<br>";
+
+					}
+				}
+			});
+		};
+			</script>
+
+
+
+		</div>
+	</body>
+</html>

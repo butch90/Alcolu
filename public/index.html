@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta charset="utf-8">
+		<title>Marcus Forum</title>
+		<!--Script tagar för att slippa ladda ner ajax/jquery -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+		<!--Valde att läga in min css direkt i mitt html ark -->
+		<style type="text/css">
+			body{
+				background-image: url('https://wallpaperscraft.com/image/dark_spot_background_texture_50611_1920x1080.jpg');
+				background-repeat: no-repeat;
+				background-attachment: fixed;
+			}
+
+			.main{
+				margin: auto;
+				width: 65%;
+				height: auto;
+				border: solid 3px black;
+				padding: 15px;
+				background-image: url('http://smhos.org/wp-content/uploads/2014/10/Silver-Blur-Background-Wallpaper.jpg');
+			}
+
+			.threadPlace{
+				float: right;
+			}
+
+			.text{
+			font-family: verdana;
+			font-size: 14px;
+			}
+
+			.title{
+				font-family: verdana;
+				font-size: 20px;
+			}
+
+			.boxes{
+				text-align: center;
+			}
+
+			.button{
+				background-image: url('http://www.slspencer.com/Graphics/Ghost%20Whisperer/GW-Back.jpg');
+				background-repeat: no-repeat;
+			 	font-weight: bold;
+				font-size: 150%;
+			 	text-transform: uppercase;
+			 	border: 3px solid black;
+			    border-radius: 55px;
+			    width: 400px;
+			    height: 90px;
+			}
+
+			.userbox{
+				padding-left: 15px;
+				width: 230px;
+				height: 35px;
+				font-size: 14px;
+			}
+
+			.userboxText{
+				padding-left: 15px;
+				width: 500px;
+				height: 140px;
+				font-size: 14px;
+			}
+
+			.big{
+				font-family: verdana;
+				font-size: 30px;
+			}
+
+			.heading{
+				font-family: verdana;
+				font-size: 40px;
+				text-align: center;
+			}
+
+			.paragraf{
+				font-family: verdana;
+				font-size: 18px;
+				text-align: center;
+			}
+
+			.threadList{
+				width: auto;
+				font-family: verdana;
+				text-align: left;
+				padding-left: 17.5%;
+				padding-right: 17.5%;
+				border: 1px solid black;
+				border-width: auto;
+			}
+
+			.threadList:hover{
+				background-image: url('http://i.imgur.com/RpnPuVX.png?1');
+				background-size: 50px;
+				background-repeat: no-repeat;
+				background-position: right;
+			}
+
+			#abc {
+				width:100%;
+				height:100%;
+				opacity:.95;
+				top:0;
+				left:0;
+				display:none;
+				position:fixed;
+				background-color:#313131;
+				overflow:auto
+			}
+
+			img#close {
+				position:absolute;
+				right:-14px;
+				top:-14px;
+				cursor:pointer
+				}
+
+			div#popupContact {
+				position:absolute;
+				left:50%;
+				top:17%;
+				margin-left:-202px;
+				font-family:'Raleway',sans-serif
+			}
+			form {
+				max-width: 500px;
+				min-width: 300px;
+				padding: 10px 50px;
+				border: 2px solid gray;
+				border-radius: 10px;
+				font-family: verdana;
+				background-color: #fff;
+			}
+
+			p {
+				margin-top: 30px;
+			}
+
+			h2 {
+				background-color: #c2f0f0;
+				padding: 20px 35px;
+				margin: -10px -50px;
+				text-align: center;
+				border-radius: 10px 10px 0 0;
+			}
+
+			hr {
+				margin: 10px -50px;
+				border: 0;
+				border-top: 1px solid #ccc;
+			}
+
+			input[type=text] {
+				width: 82%;
+				padding: 10px;
+				margin-top: 30px;
+				border: 1px solid #ccc;
+				padding-left: 40px;
+				font-size: 16px;
+				font-family:verdana;
+			}
+
+			textarea {
+				width: 82%;
+				height: 95px;
+				padding: 10px;
+				resize: none;
+				margin-top: 30px;
+				border: 1px solid #ccc;
+				padding-left: 40px;
+				font-size: 16px;
+				font-family: raleway;
+				margin-bottom: 30px;
+			}
+
+			#submit {
+				text-decoration: none;
+				width: 100%;
+				text-align: center;
+				display: block;
+				background-image: url('https://wallpaperscraft.com/image/dark_spot_background_texture_50611_1920x1080.jpg');
+				color: #fff;
+				border: 1px solid black;
+				padding: 10px 0;
+				font-size: 20px;
+				cursor: pointer;
+				border-radius: 5px;
+			}
+
+			span {
+				color: red;
+				font-weight: 700;
+			}
+
+		</style>
+
+	</head>
+	<body id="body" onload="getMessages();">
+		<div class="main">
+
+			<div id="abc">
+					
+				<div id="popupContact">
+					
+					<form action="" id="form" method="post" name="form">
+
+					<img id="close" src="http://theaveragejess.com/wp-content/uploads/2012/02/redx-300x297.jpg" width="18px" height="18px" onclick ="div_hide()">
+
+					<h2>Thread Editor</h2>
+
+
+					<hr>
+					<input id="idOutput" class="userbox" placeholder="Signify id:"> Type Thread Id Here! <br><br>
+					<input id="titleOutput" class="userbox" placeholder="Signify Title:"> Type Thread Title Here!<br><br>
+					<textarea id="textOutput" class="userboxText" placeholder="Signify Text:"></textarea>
+					<!--<input id="textOutput" class="userboxText" placeholder="Signify Text:"><br><br>-->
+					<!--knappar som finns i min popup, med länkar till mina funktioner i min script fil -->
+					<a href="javascript:%20check_empty()" id="submit">Post</a>
+					<br>
+					<a href="javascript:%20updateMessages()" id="submit">Update</a><br>
+					<a href="javascript:%20deleteMessages()" id="submit">Delete</a>
+					<br>
+
+					</form>
+
+				</div>
+			
+			</div>
+			<div>
+				
+				<h1 class="heading">
+					Marcus Simpla API Forum!	
+				</h1>
+
+				<p class="paragraf">
+					Välkommen till min simpla api, denna sida hämtar och postar till<br> min threads array i server.js. För att redigera, klicka på "Edit Threads", <br> trådarna hämtas sedan automatiskt.
+				</p>
+
+				<br>
+			</div>
+			<!--Här kommer mina knappar samt inputs för att ge värde åt mina objekt i min array, knapparna är länkade via en eventListener -->
+			<div class="boxes">
+
+				<button class="button" id="popup" onclick="div_show()">Edit threads</button>
+
+			</div>
+
+				<h1 class="heading">
+					Lista på forums trådar nedan!	
+				</h1>
+
+				<p id="input" class="comments"></p>
+
+		</div>
+		
+			<script type="text/javascript">
+			//Mina evenListeners som hämtar vardera funktion vid eventet "click"
+				document.getElementById("get").addEventListener("click", getMessages);
+
+				document.getElementById("delete").addEventListener("click", deleteMessages);
+
+				//Min post funktion som postar id, title, text från mina inputs till min array threads i min api via ajax
+				function sendMessages(){
+
+				$.ajax({
+
+					url: "/api/threads/",
+
+					method: 'POST',
+
+					data: {id: document.getElementById("idOutput").value, title: document.getElementById("titleOutput").value, text: document.getElementById("textOutput").value}
+
+				}).done(function(data)
+				{
+					//kontrollerar så att data innehåller något
+					console.log(data);
+				
+				});
+					//meddelar att jag har skickat en post request till min server
+					alert("Meddelande skickat");
+					
+					location.reload();
+				};
+
+				//Min delete funktion som tar bort hela objektet i min array via splice, för att inte få ett NULL värde i min array.
+				function deleteMessages(){
+					//Var jag deklarerar mitt id som funktionen och ajax requesten ska följa.
+					var rawId = document.getElementById("idOutput");
+
+					console.log(id);
+
+					var id = rawId.value;
+					//ajax requset som använder sig av methoden DELETE
+					$.ajax({
+
+						url: "/api/threads/" +id,
+
+						method: "DELETE"
+
+					}).done(function(data)
+					{
+						//meddelar att jag deletat ett objekt med ett specifikt värde
+						alert('Deleted!');
+
+						location.reload();
+					});
+				};
+
+				
+				//Min get funktion som hämtar alla objekten i min threads array från servern, med hjälp av ajax, get behöver inte skrivas ut i method då det är standard läget för ajax
+				function getMessages(){
+			
+				$.ajax({
+				
+				  url: "/api/threads",
+				
+				}).done(function(data) 
+				{
+					//if sats som kollar så att min array inte är tom, så fall får jag ett error i consolen
+					if(data.threads.length <= 0){
+
+						console.log("Error");
+						
+					} else {
+
+						console.log(data);
+					
+					document.getElementById("input").innerHTML = "";
+					//lopar min threads array och går igenom varje objekt och plockar ut id, title samt text och placerar i divar i min input ovan i min html
+						for(var i = 0; i < data.threads.length; i++){
+
+					document.getElementById("input").innerHTML +=
+					"<div onclick='remove()' class='threadList'>" + "<b>" + data.threads[i].id + "</b>" + "." + "<br>" + "<b>" + data.threads[i].title + "</b>" + ": " + data.threads[i].text + "." + "</div>" + "<br>";
+
+
+							}
+						}
+					});
+				};
+				//Min put som uppdaterar innehållet i ett specifikt objekt i min array via id, och ajax
+				function updateMessages(){
+
+					var rawId = document.getElementById("idOutput");
+
+					console.log(id);
+
+					var id = rawId.value;
+
+					$.ajax({
+
+						url: "/api/threads/" + id,
+
+						method: "PUT",
+
+						data: {id: document.getElementById("idOutput").value, title: document.getElementById("titleOutput").value, text: document.getElementById("textOutput").value}
+
+					}).done(function(data)
+					{
+					
+						alert("updated");
+
+						location.reload();
+
+					});
+				};
+				// Funktion för att kolla om innehållet i mina inputs är tomma, om dom är det retuneras en alert
+				function check_empty() 
+				{
+					//kollar om det är tomma inputs
+				if (document.getElementById('idOutput').value == "" || document.getElementById('titleOutput').value == "" || document.getElementById('textOutput').value == "") 
+				{
+					//ger alert om det är tomma inputs
+				alert("Fill All Fields !");
+
+				} else {
+					//annars retuneras min sendmessages funktion.
+				return sendMessages();
+				//var den ska hämta ifrån
+				document.getElementById('form').submit();
+				
+				alert("Form Submitted Successfully...");
+
+					}
+				}
+				//funktion för min popup ruta, att synas vid knapptrycket
+				function div_show() 
+				{
+
+				document.getElementById('abc').style.display = "block";
+
+				}
+				//funktion för att ta bort min popup
+				function div_hide()
+				{
+
+				document.getElementById('abc').style.display = "none";
+
+				}
+
+				function remove()
+				{
+					return deleteMessages();
+				}
+			</script>
+		</div>
+	</body>
+</html>

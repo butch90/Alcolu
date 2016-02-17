@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta charset="utf-8">
+		<title>Thread</title>
+		<!--Script tagar för att slippa ladda ner ajax/jquery -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+		<script src="popup.js"></script>
+
+		<!--Valde att läga in min css direkt i mitt html ark -->
+		<style type="text/css">
+			body{
+				background-color: #e5e5cc;
+			}
+
+			.main{
+				margin: auto;
+				width: 65%;
+				height: auto;
+				border: solid 3px black;
+				padding: 15px;
+				background-color: #bbbb77;
+			}
+
+			.text{
+			font-family: verdana;
+			font-size: 14px;
+			}
+
+			.title{
+				font-family: verdana;
+				font-size: 20px;
+			}
+
+			.boxes{
+				text-align: center;
+			}
+
+			.button{
+				background-color: #94b8b8;
+			 	font-weight: bold;
+				font-size: 150%;
+			 	text-transform: uppercase;
+			 	border: 3px solid black;
+			    border-radius: 25px;
+			}
+
+			.userbox{
+				padding-left: 15px;
+				width: 400px;
+				height: 35px;
+				font-size: 14px;
+			}
+
+			.big{
+				font-family: verdana;
+				font-size: 30px;
+			}
+
+			.heading{
+				font-family: verdana;
+				font-size: 40px;
+				text-align: center;
+			}
+
+			.paragraf{
+				font-family: verdana;
+				font-size: 18px;
+				text-align: center;
+			}
+
+			.threadList{
+				width: 800px;
+				font-family: verdana;
+				text-align: center;
+				padding-left: 17.5%;
+			}
+		</style>
+
+	</head>
+	<body id="body" style="overflow:hidden;">
+		<div class="main">
+
+			<div id="abc">
+					<!-- Popup Div Starts Here -->
+				<div id="popupContact">
+				<!-- Contact Us Form -->
+				<form action="#" id="form" method="post" name="form">
+				<img id="close" src="images/3.png" onclick ="div_hide()">
+				<h2>Contact Us</h2>
+				<hr>
+				<input id="name" name="name" placeholder="Name" type="text">
+				<input id="email" name="email" placeholder="Email" type="text">
+				<textarea id="msg" name="message" placeholder="Message"></textarea>
+				<a href="javascript:%20check_empty()" id="submit">Send</a>
+				</form>
+				</div>
+				<!-- Popup Div Ends Here -->
+				</div>
+				<!-- Display Popup Button -->
+				<h1>Click Button To Popup Form Using Javascript</h1>
+				<button id="popup" onclick="div_show()">Popup</button>
+
+
+			<h1 class="heading">
+				Marcus Simpla API!	
+			</h1>
+
+			<p class="paragraf">
+				Välkommen till min simpla api, denna sida hämtar och postar till<br> min threads array i server.js. För att ta bort något eller <br>redigera, ange id på föremål som önskas borttagas. Id finner du ovan titeln.  
+			</p>
+
+			<br>
+			<!--Här kommer mina knappar samt inputs för att ge värde åt mina objekt i min array, knapparna är länkade via en eventListener -->
+			<div class="boxes">
+			    <b class="big">ID:</b> <input id="idOutput" class="userbox" placeholder="Signify id:"><br><br>
+				<b class="big">Title:</b> <input id="titleOutput" class="userbox" placeholder="Signify Title:"><br><br>
+				<b class="big">Text:</b> <input id="textOutput" class="userbox" placeholder="Signify Text:"><br><br>
+
+				<button class="button" id="send">Send Comment</button><br><br>
+
+				<button class="button" id="delete">Delete Comment</button><br><br>
+
+				<button class="button" id="update">Update Comment</button><br><br>
+
+				<button class="button" id="get">Get Comments</button><br><br>
+
+			</div>
+
+			<h1 class="heading">
+				Lista för trådar nedan!	
+			</h1>
+
+			<p id="input" class="comments"></p>
+
+			<script type="text/javascript">
+			//Mina evenListeners som hämtar vardera funktion vid eventet "click"
+				document.getElementById("get").addEventListener("click", getMessages);
+
+				document.getElementById("send").addEventListener("click", sendMessages);
+
+				document.getElementById("delete").addEventListener("click", deleteMessages);
+
+				document.getElementById("update").addEventListener("click", updateMessages);
+
+
+				//Min post funktion som postar id, title, text från mina inputs till min array threads i min api via ajax
+				function sendMessages(){
+
+				$.ajax({
+
+					url: "/api/threads/",
+
+					method: 'POST',
+
+					data: {id: document.getElementById("idOutput").value, title: document.getElementById("titleOutput").value, text: document.getElementById("textOutput").value}
+
+				}).done(function(data)
+				{
+					//kontrollerar så att data innehåller något
+					console.log(data);
+				
+				});
+					//meddelar att jag har skickat en post request till min server
+					alert("Meddelande skickat");
+
+				};
+
+				//Min delete funktion som tar bort hela objektet i min array via splice, för att inte få ett NULL värde i min array.
+				function deleteMessages(){
+					//Var jag deklarerar mitt id som funktionen och ajax requesten ska följa.
+					var rawId = document.getElementById("idOutput");
+
+					console.log(id);
+
+					var id = rawId.value;
+					//ajax requset som använder sig av methoden DELETE
+					$.ajax({
+
+						url: "/api/threads/" +id,
+
+						method: "DELETE"
+
+					}).done(function(data)
+					{
+						//meddelar att jag deletat ett objekt med ett specifikt värde
+						alert('Deleted!');
+
+					});
+				};
+
+				
+				//Min get funktion som hämtar alla objekten i min threads array från servern, med hjälp av ajax, get behöver inte skrivas ut i method då det är standard läget för ajax
+				function getMessages(){
+			
+				$.ajax({
+				
+				  url: "/api/threads",
+				
+				}).done(function(data) 
+				{
+					//if sats som kollar så att min array inte är tom, så fall får jag ett error i consolen
+					if(data.threads.length <= 0){
+
+						console.log("Error");
+						
+					} else {
+
+						console.log(data);
+					
+					document.getElementById("input").innerHTML = "";
+					//lopar min threads array och går igenom varje objekt och plockar ut id, title samt text och placerar i divar i min input ovan i min html
+						for(var i = 0; i < data.threads.length; i++){
+
+					document.getElementById("input").innerHTML +=
+					"<div class='threadList'>" + "<b>" + data.threads[i].id + "</b>" + "." + "<br>" + "<b>" + data.threads[i].title + "</b>" + ": " + data.threads[i].text + "." + "</div>" + "<br>";
+
+
+							}
+						}
+					});
+				};
+				//Min put som uppdaterar innehållet i ett specifikt objekt i min array via id, och ajax
+				function updateMessages(){
+
+					var rawId = document.getElementById("idOutput");
+
+					console.log(id);
+
+					var id = rawId.value;
+
+					$.ajax({
+
+						url: "/api/threads/" + id,
+
+						method: "PUT",
+
+						data: {id: document.getElementById("idOutput").value, title: document.getElementById("titleOutput").value, text: document.getElementById("textOutput").value}
+
+					}).done(function(data)
+					{
+					
+						alert("updated");
+
+						location.reload();
+
+					});
+				};
+			</script>
+		</div>
+	</body>
+</html>
